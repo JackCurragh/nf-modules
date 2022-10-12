@@ -1,7 +1,6 @@
-
 process SAMTOOLS_CALMD {
     tag "$meta.id"
-    label 'process_low'
+    label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::samtools=1.15.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -24,8 +23,13 @@ process SAMTOOLS_CALMD {
     def prefix = task.ext.prefix ?: "${meta.id}"
     if ("$bam" == "${prefix}.bam") error "Input and output names are the same, use \"task.ext.prefix\" to disambiguate!"
     """
-    samtools calmd -@ $task.cpus $args $bam $fasta > ${prefix}.bam
-
+    samtools calmd \\
+        -@ $task.cpus \\
+        $args \\ 
+        $bam \\
+        $fasta \\
+        > ${prefix}.bam
+        
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         SAMTOOLS_CALMD: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' ))

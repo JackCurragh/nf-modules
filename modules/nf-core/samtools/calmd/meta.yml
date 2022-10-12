@@ -29,6 +29,11 @@ input:
       description: BAM/CRAM/SAM file
       pattern: "*.{bam,cram,sam}"
 
+  - fasta:
+      type: file
+      description: FASTA reference file
+      pattern: "*.fasta"
+
 output:
   - meta:
       type: map
